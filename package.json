@@ -17,7 +17,12 @@
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "test:e2e": "jest --config ./test/jest-e2e.json",
+    "prisma:dev:deploy": "prisma migrate deploy",
+    "prisma:dev:seed": "ts-node prisma/seed.ts",
+    "db:dev:rm": "docker compose rm db -f -s -v",
+    "db:dev:up": "docker compose up -d",
+    "db:dev:restart": "pnpm db:dev:rm && pnpm db:dev:up && sleep 1 && pnpm prisma:dev:deploy && pnpm prisma:dev:seed"
   },
   "dependencies": {
     "@nestjs/common": "^11.0.1",
@@ -25,6 +30,8 @@
     "@nestjs/core": "^11.0.1",
     "@nestjs/platform-express": "^11.0.1",
     "@prisma/client": "^6.3.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
     "mysql2": "^3.12.0",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.1",

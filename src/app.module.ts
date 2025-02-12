@@ -1,25 +1,16 @@
 import { Module } from '@nestjs/common';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { StudentModule } from './student/student.module';
 import { ConfigModule } from '@nestjs/config';
-import dbConfig from './config/db.config';
-import nodeConfig from './config/node.config';
+import { TeacherModule } from './teacher/teacher.module';
+import config from './config/config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
       expandVariables: true,
-      load: [dbConfig, nodeConfig],
+      load: [config],
     }),
-    TypeOrmModule.forRootAsync({
-      useFactory: dbConfig,
-    }),
-    StudentModule,
+    TeacherModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

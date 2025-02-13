@@ -18,8 +18,9 @@ model Teacher {
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt()
 
-  email    String    @unique
-  students Student[]
+  email String @unique
+
+  TeacherOnStudent TeacherOnStudent[]
 
   @@map("teachers")
 }
@@ -29,8 +30,20 @@ model Student {
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt()
 
-  email    String    @unique
-  teachers Teacher[]
+  email String @unique
+
+  TeacherOnStudent TeacherOnStudent[]
 
   @@map("students")
+}
+
+model TeacherOnStudent {
+  teacher    Teacher @relation(fields: [teacher_id], references: [id])
+  teacher_id Int
+
+  student    Student @relation(fields: [student_id], references: [id])
+  student_id Int
+
+  @@id([teacher_id, student_id])
+  @@map("teachers_on_students")
 }

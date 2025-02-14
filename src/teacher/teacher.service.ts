@@ -1,28 +1,25 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { RegisterStudentRequestDTO } from './dtos';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { StudentRepo } from 'src/repositories/student.repo';
+import { TeacherRepo } from 'src/repositories/teacher.repo';
+import { TeacherOnStudentRepo } from 'src/repositories/teacher-on-student.repo';
 
 @Injectable()
 export class TeacherService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private studentRepo: StudentRepo,
+    private teacherRepo: TeacherRepo,
+    private teacherOnStudentRepo: TeacherOnStudentRepo,
+  ) {}
 
   async registerStudent(data: RegisterStudentRequestDTO) {
-    const teacher = await this.prisma.teacher.findUnique({
-      where: { email: data.teacher },
-      select: { id: true },
-    });
+    const teacher = await this.teacherRepo.getTeacherByEmail(data.teacher);
 
     if (!teacher) {
       throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
     }
 
-    const students = await this.prisma.student.findMany({
-      where: {
-        email: {
-          in: data.students,
-        },
-      },
-    });
+    const students = await this.studentRepo.getStudentsByEmails(data.students);
 
     if (students.length !== data.students.length) {
       throw new HttpException(
@@ -31,13 +28,11 @@ export class TeacherService {
       );
     }
 
-    const teacherOnStudents = await this.prisma.teacherOnStudent.createMany({
-      data: students.map((student) => ({
-        teacher_id: teacher.id,
-        student_id: student.id,
-      })),
-      skipDuplicates: true,
-    });
+    const teacherOnStudents =
+      await this.teacherOnStudentRepo.createTeacherOnStudents(
+        teacher.id,
+        students.map((student) => student.id),
+      );
 
     return teacherOnStudents;
   }

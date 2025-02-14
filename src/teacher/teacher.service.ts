@@ -13,15 +13,16 @@ export class TeacherService {
   ) {}
 
   async registerStudent(data: RegisterStudentRequestDTO) {
-    const teacher = await this.teacherRepo.getTeacherByEmail(data.teacher);
+    const { teacher: teacherEmail, students: studentEmails } = data;
+    const teacher = await this.teacherRepo.getTeacherByEmail(teacherEmail);
 
     if (!teacher) {
       throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
     }
 
-    const students = await this.studentRepo.getStudentsByEmails(data.students);
+    const students = await this.studentRepo.getStudentsByEmails(studentEmails);
 
-    if (students.length !== data.students.length) {
+    if (students.length !== studentEmails.length) {
       throw new HttpException(
         '1 or more students not found',
         HttpStatus.NOT_FOUND,
@@ -37,14 +38,12 @@ export class TeacherService {
     return teacherOnStudents;
   }
 
-  async getCommonStudents(teacher: string[]) {
+  async getCommonStudents(teacherEmails: string[]) {
     try {
-      // const teacherIds = await this.prisma.teacher.findMany({
-      //   where: { email: { in: teacher } },
-      //   select: { id: true },
-      // });
-      // const commonStudents = await this.prisma.
-      // return { students: commonStudents };
+      const commonStudents =
+        await this.teacherRepo.getCommonStudentsByTeacherEmails(teacherEmails);
+
+      return commonStudents.map((student) => student.email);
     } catch (error) {
       throw error;
     }

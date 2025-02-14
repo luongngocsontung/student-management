@@ -1,6 +1,15 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { RegisterStudentRequestDTO } from './dto';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Query,
+} from '@nestjs/common';
+import { RegisterStudentRequestDTO } from './dtos';
 import { TeacherService } from './teacher.service';
+import { CommonStudentsRequestDTO } from './dtos/request/common-students.dto';
 
 @Controller('api')
 export class TeacherController {
@@ -10,5 +19,11 @@ export class TeacherController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async registerStudent(@Body() dto: RegisterStudentRequestDTO) {
     await this.teacherService.registerStudent(dto);
+  }
+
+  @Get('commonstudents')
+  @HttpCode(HttpStatus.OK)
+  async getCommonStudents(@Query() query: CommonStudentsRequestDTO) {
+    return this.teacherService.getCommonStudents(query.teacher);
   }
 }

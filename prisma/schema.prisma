@@ -45,5 +45,7 @@ model TeacherOnStudent {
   student_id Int
 
   @@id([teacher_id, student_id])
+  @@index([teacher_id])
+  @@index([student_id])
   @@map("teachers_on_students")
 }

@@ -14,4 +14,15 @@ export class StudentRepo {
       },
     });
   }
+
+  suspendStudentByEmail(email: string) {
+    return this.prisma.student.update({
+      where: {
+        email,
+      },
+      data: {
+        is_suspended: true,
+      },
+    });
+  }
 }

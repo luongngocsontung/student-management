@@ -48,4 +48,17 @@ export class TeacherService {
       throw error;
     }
   }
+
+  async suspendStudent(studentEmail: string) {
+    try {
+      const student =
+        await this.studentRepo.suspendStudentByEmail(studentEmail);
+      return student;
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new HttpException('Student not found', HttpStatus.NOT_FOUND);
+      }
+      throw error;
+    }
+  }
 }

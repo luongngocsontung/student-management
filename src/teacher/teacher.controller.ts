@@ -10,6 +10,7 @@ import {
 import { RegisterStudentRequestDTO } from './dtos';
 import { TeacherService } from './teacher.service';
 import { CommonStudentsRequestDTO } from './dtos/request/common-students.dto';
+import { SuspendStudentRequestDTO } from './dtos/request/suspend-student.dto';
 
 @Controller('api')
 export class TeacherController {
@@ -23,7 +24,13 @@ export class TeacherController {
 
   @Get('commonstudents')
   @HttpCode(HttpStatus.OK)
-  async getCommonStudents(@Query() query: CommonStudentsRequestDTO) {
+  getCommonStudents(@Query() query: CommonStudentsRequestDTO) {
     return this.teacherService.getCommonStudents(query.teacher);
+  }
+
+  @Post('suspend')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async suspendStudent(@Body() dto: SuspendStudentRequestDTO) {
+    await this.teacherService.suspendStudent(dto.student);
   }
 }

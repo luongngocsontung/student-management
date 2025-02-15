@@ -30,7 +30,8 @@ model Student {
   createAt DateTime @default(now())
   updateAt DateTime @updatedAt()
 
-  email String @unique
+  email        String  @unique
+  is_suspended Boolean @default(false)
 
   TeacherOnStudent TeacherOnStudent[]
 

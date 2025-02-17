@@ -32,4 +32,15 @@ export class TeacherRepo {
     `;
     return commonStudents;
   }
+
+  async getRegistedStudentsByTeacherId(
+    teacherId: number,
+  ): Promise<{ email: string }[]> {
+    const registedStudents: { email: string }[] = await this.prisma.$queryRaw`
+      SELECT s.email FROM teachers_on_students tos
+      INNER JOIN students s ON s.id = tos.student_id AND s.is_suspended = false
+      WHERE tos.teacher_id = ${teacherId}
+    `;
+    return registedStudents;
+  }
 }

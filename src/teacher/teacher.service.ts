@@ -3,6 +3,8 @@ import { RegisterStudentRequestDTO } from './dtos';
 import { StudentRepo } from 'src/repositories/student.repo';
 import { TeacherRepo } from 'src/repositories/teacher.repo';
 import { TeacherOnStudentRepo } from 'src/repositories/teacher-on-student.repo';
+import { RetrieveNotificationRequestDTO } from './dtos/request/retrieve-notification.dto';
+import { extractEmailsFromText } from 'src/utils/common';
 
 @Injectable()
 export class TeacherService {
@@ -39,14 +41,10 @@ export class TeacherService {
   }
 
   async getCommonStudents(teacherEmails: string[]) {
-    try {
-      const commonStudents =
-        await this.teacherRepo.getCommonStudentsByTeacherEmails(teacherEmails);
+    const commonStudents =
+      await this.teacherRepo.getCommonStudentsByTeacherEmails(teacherEmails);
 
-      return commonStudents.map((student) => student.email);
-    } catch (error) {
-      throw error;
-    }
+    return commonStudents.map((student) => student.email);
   }
 
   async suspendStudent(studentEmail: string) {
@@ -60,5 +58,34 @@ export class TeacherService {
       }
       throw error;
     }
+  }
+
+  async getStudentsFromNotification(dto: RetrieveNotificationRequestDTO) {
+    const teacher = await this.teacherRepo.getTeacherByEmail(dto.teacher);
+    if (!teacher) {
+      throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
+    }
+
+    const studentEmails = new Set();
+
+    // Get registed students from teacher
+    const registedStudents =
+      await this.teacherRepo.getRegistedStudentsByTeacherId(teacher.id);
+    registedStudents.map((student) => studentEmails.add(student.email));
+
+    // Extract student emails from notification
+    const studentEmailsFromNotification = extractEmailsFromText(
+      dto.notification,
+    );
+
+    // Get existed students from notification
+    const existedStudents = await this.studentRepo.getActiveStudentsByEmails(
+      studentEmailsFromNotification,
+    );
+    existedStudents.map((student) => studentEmails.add(student.email));
+
+    return {
+      recipients: Array.from(studentEmails),
+    };
   }
 }

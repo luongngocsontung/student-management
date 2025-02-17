@@ -11,6 +11,7 @@ import { RegisterStudentRequestDTO } from './dtos';
 import { TeacherService } from './teacher.service';
 import { CommonStudentsRequestDTO } from './dtos/request/common-students.dto';
 import { SuspendStudentRequestDTO } from './dtos/request/suspend-student.dto';
+import { RetrieveNotificationRequestDTO } from './dtos/request/retrieve-notification.dto';
 
 @Controller('api')
 export class TeacherController {
@@ -32,5 +33,11 @@ export class TeacherController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async suspendStudent(@Body() dto: SuspendStudentRequestDTO) {
     await this.teacherService.suspendStudent(dto.student);
+  }
+
+  @Post('retrievefornotifications')
+  @HttpCode(HttpStatus.OK)
+  retrieveForNotifications(@Body() dto: RetrieveNotificationRequestDTO) {
+    return this.teacherService.getStudentsFromNotification(dto);
   }
 }

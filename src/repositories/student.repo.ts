@@ -15,6 +15,17 @@ export class StudentRepo {
     });
   }
 
+  getActiveStudentsByEmails(emails: string[]) {
+    return this.prisma.student.findMany({
+      where: {
+        email: {
+          in: emails,
+        },
+        is_suspended: false,
+      },
+    });
+  }
+
   suspendStudentByEmail(email: string) {
     return this.prisma.student.update({
       where: {

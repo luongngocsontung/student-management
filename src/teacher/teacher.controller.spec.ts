@@ -5,16 +5,10 @@ import { RegisterStudentRequestDTO } from './dtos';
 import { CommonStudentsRequestDTO } from './dtos/request/common-students.dto';
 import { SuspendStudentRequestDTO } from './dtos/request/suspend-student.dto';
 import { RetrieveNotificationRequestDTO } from './dtos/request/retrieve-notification.dto';
+import { mockTeacherService } from 'src/__mocks__';
 
 describe('TeacherController', () => {
   let controller: TeacherController;
-
-  const mockTeacherService = {
-    registerStudents: jest.fn(),
-    getCommonStudents: jest.fn(),
-    suspendStudent: jest.fn(),
-    retrieveForNotifications: jest.fn(),
-  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({

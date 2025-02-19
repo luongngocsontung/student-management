@@ -1,5 +1,6 @@
 export const mockStudentRepo = {
   getStudentsByEmails: jest.fn(),
+  getActiveStudentsByEmails: jest.fn(),
   suspendStudentByEmail: jest.fn(),
 };
 

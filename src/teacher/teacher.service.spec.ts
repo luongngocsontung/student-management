@@ -11,7 +11,8 @@ import { TeacherOnStudentRepo } from 'src/repositories/teacher-on-student.repo';
 import { RegisterStudentRequestDTO } from './dtos';
 import { HttpException, HttpStatus } from '@nestjs/common';
 import { RetrieveNotificationRequestDTO } from './dtos/request/retrieve-notification.dto';
-import { extractEmailsFromText } from 'src/utils/common';
+import { extractEmailsFromText } from 'src/utils';
+import { Messages } from 'src/constants';
 
 jest.mock('src/utils/common', () => ({
   extractEmailsFromText: jest.fn(),
@@ -51,7 +52,7 @@ describe('TeacherService', () => {
       mockTeacherRepo.getTeacherByEmail.mockResolvedValue(null);
 
       await expect(service.registerStudents(dto)).rejects.toThrow(
-        new HttpException('Teacher not found', HttpStatus.NOT_FOUND),
+        new HttpException(Messages.TEACHER_NOT_FOUND, HttpStatus.NOT_FOUND),
       );
     });
 
@@ -60,7 +61,10 @@ describe('TeacherService', () => {
       mockStudentRepo.getStudentsByEmails.mockResolvedValue([]);
 
       await expect(service.registerStudents(dto)).rejects.toThrow(
-        new HttpException('1 or more students not found', HttpStatus.NOT_FOUND),
+        new HttpException(
+          Messages.ONE_OR_MORE_STUDENTS_NOT_FOUND,
+          HttpStatus.NOT_FOUND,
+        ),
       );
     });
 
@@ -144,7 +148,7 @@ describe('TeacherService', () => {
       mockStudentRepo.suspendStudentByEmail.mockRejectedValue(error);
 
       await expect(service.suspendStudent(studentEmail)).rejects.toThrow(
-        new HttpException('Student not found', HttpStatus.NOT_FOUND),
+        new HttpException(Messages.STUDENT_NOT_FOUND, HttpStatus.NOT_FOUND),
       );
     });
   });
@@ -196,7 +200,7 @@ describe('TeacherService', () => {
       mockTeacherRepo.getTeacherByEmail.mockResolvedValue(null);
 
       await expect(service.retrieveForNotifications(dto)).rejects.toThrow(
-        new HttpException('Teacher not found', HttpStatus.NOT_FOUND),
+        new HttpException(Messages.TEACHER_NOT_FOUND, HttpStatus.NOT_FOUND),
       );
     });
   });

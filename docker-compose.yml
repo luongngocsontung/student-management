@@ -35,7 +35,7 @@ services:
     container_name: nestjs_app
     build:
       context: .
-      dockerfile: DockerFile
+      dockerfile: Dockerfile
     depends_on:
       db:
         condition: service_healthy
@@ -48,13 +48,12 @@ services:
       - '${NODE_PORT}:${NODE_PORT}'
     healthcheck:
       test: ['CMD', 'curl', '-f', 'http://localhost:${NODE_PORT}/health']
-      interval: 30s
       timeout: 10s
       retries: 3
     volumes:
-      - .:/usr/src/app # Mount local files into the container
-      - /usr/src/app/node_modules # Prevent overwriting node_modules
-
+      - ./src:/app/src # Mount local files into the container
+    # command:
+    #   -
 volumes:
   db:
     driver: local

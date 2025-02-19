@@ -14,7 +14,7 @@ export class TeacherService {
     private teacherOnStudentRepo: TeacherOnStudentRepo,
   ) {}
 
-  async registerStudent(data: RegisterStudentRequestDTO) {
+  async registerStudents(data: RegisterStudentRequestDTO) {
     const { teacher: teacherEmail, students: studentEmails } = data;
     const teacher = await this.teacherRepo.getTeacherByEmail(teacherEmail);
 

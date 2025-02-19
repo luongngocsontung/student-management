@@ -20,4 +20,4 @@ EXPOSE ${APP_PORT}
 RUN pnpm build
 
 # Command to start the app
-CMD ["pnpm", "start:prod"]
+CMD ["sh", "-c", "pnpm db:deploy && pnpm start:dev"]

@@ -8,12 +8,26 @@ services:
     restart: always
     environment:
       MYSQL_DATABASE: ${DATABASE_NAME}
-      MYSQL_ROOT_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
       MYSQL_USER: ${DATABASE_USERNAME}
       MYSQL_PASSWORD: ${DATABASE_PASSWORD}
       MYSQL_TCP_PORT: ${DATABASE_PORT}
     ports:
       - '${DATABASE_PORT}:${DATABASE_PORT}'
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'mysqladmin',
+          'ping',
+          '-h',
+          'localhost',
+          '-u',
+          'root',
+          '-p$$DATABASE_ROOT_PASSWORD',
+        ]
+      timeout: 20s
+      retries: 10
     volumes:
       - db:/var/lib/mysql
 
@@ -22,17 +36,24 @@ services:
     build:
       context: .
       dockerfile: DockerFile
-    restart: always
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     env_file:
       - .env
+    environment:
+      - DATABASE_HOST=mysql_db
+      - DATABASE_URL=mysql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@mysql_db:${DATABASE_PORT}/${DATABASE_NAME}
     ports:
       - '${NODE_PORT}:${NODE_PORT}'
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:${NODE_PORT}/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
     volumes:
-      - .:/usr/src/app # Mount local code to container
+      - .:/usr/src/app # Mount local files into the container
       - /usr/src/app/node_modules # Prevent overwriting node_modules
-    command: pnpm start:dev
 
 volumes:
   db:

@@ -1,0 +1,15 @@
+# Ignore node_modules and dependency folders
+node_modules
+dist
+
+# Ignore environment files (security)
+.env
+
+# Ignore Docker-related files
+docker-compose.yml
+Dockerfile
+
+# Ignore logs and temp files
+pnpm-debug.log
+*.log
+.DS_Store

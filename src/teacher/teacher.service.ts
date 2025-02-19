@@ -4,7 +4,8 @@ import { StudentRepo } from 'src/repositories/student.repo';
 import { TeacherRepo } from 'src/repositories/teacher.repo';
 import { TeacherOnStudentRepo } from 'src/repositories/teacher-on-student.repo';
 import { RetrieveNotificationRequestDTO } from './dtos/request/retrieve-notification.dto';
-import { extractEmailsFromText } from 'src/utils/common';
+import { extractEmailsFromText } from 'src/utils';
+import { Messages } from 'src/constants';
 
 @Injectable()
 export class TeacherService {
@@ -14,19 +15,19 @@ export class TeacherService {
     private teacherOnStudentRepo: TeacherOnStudentRepo,
   ) {}
 
-  async registerStudent(data: RegisterStudentRequestDTO) {
+  async registerStudents(data: RegisterStudentRequestDTO) {
     const { teacher: teacherEmail, students: studentEmails } = data;
     const teacher = await this.teacherRepo.getTeacherByEmail(teacherEmail);
 
     if (!teacher) {
-      throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
+      throw new HttpException(Messages.TEACHER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 
     const students = await this.studentRepo.getStudentsByEmails(studentEmails);
 
     if (students.length !== studentEmails.length) {
       throw new HttpException(
-        '1 or more students not found',
+        Messages.ONE_OR_MORE_STUDENTS_NOT_FOUND,
         HttpStatus.NOT_FOUND,
       );
     }
@@ -54,16 +55,19 @@ export class TeacherService {
       return student;
     } catch (error) {
       if (error.code === 'P2025') {
-        throw new HttpException('Student not found', HttpStatus.NOT_FOUND);
+        throw new HttpException(
+          Messages.STUDENT_NOT_FOUND,
+          HttpStatus.NOT_FOUND,
+        );
       }
       throw error;
     }
   }
 
-  async getStudentsFromNotification(dto: RetrieveNotificationRequestDTO) {
+  async retrieveForNotifications(dto: RetrieveNotificationRequestDTO) {
     const teacher = await this.teacherRepo.getTeacherByEmail(dto.teacher);
     if (!teacher) {
-      throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);
+      throw new HttpException(Messages.TEACHER_NOT_FOUND, HttpStatus.NOT_FOUND);
     }
 
     const studentEmails = new Set();

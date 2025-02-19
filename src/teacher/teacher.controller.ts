@@ -19,8 +19,8 @@ export class TeacherController {
 
   @Post('register')
   @HttpCode(HttpStatus.NO_CONTENT)
-  async registerStudent(@Body() dto: RegisterStudentRequestDTO) {
-    await this.teacherService.registerStudent(dto);
+  async registerStudents(@Body() dto: RegisterStudentRequestDTO) {
+    await this.teacherService.registerStudents(dto);
   }
 
   @Get('commonstudents')
@@ -38,6 +38,6 @@ export class TeacherController {
   @Post('retrievefornotifications')
   @HttpCode(HttpStatus.OK)
   retrieveForNotifications(@Body() dto: RetrieveNotificationRequestDTO) {
-    return this.teacherService.getStudentsFromNotification(dto);
+    return this.teacherService.retrieveForNotifications(dto);
   }
 }

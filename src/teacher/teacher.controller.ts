@@ -38,6 +38,6 @@ export class TeacherController {
   @Post('retrievefornotifications')
   @HttpCode(HttpStatus.OK)
   retrieveForNotifications(@Body() dto: RetrieveNotificationRequestDTO) {
-    return this.teacherService.getStudentsFromNotification(dto);
+    return this.teacherService.retrieveForNotifications(dto);
   }
 }

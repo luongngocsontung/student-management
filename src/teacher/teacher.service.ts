@@ -60,7 +60,7 @@ export class TeacherService {
     }
   }
 
-  async getStudentsFromNotification(dto: RetrieveNotificationRequestDTO) {
+  async retrieveForNotifications(dto: RetrieveNotificationRequestDTO) {
     const teacher = await this.teacherRepo.getTeacherByEmail(dto.teacher);
     if (!teacher) {
       throw new HttpException('Teacher not found', HttpStatus.NOT_FOUND);

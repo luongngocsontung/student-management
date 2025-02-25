@@ -18,7 +18,7 @@ const config: Config = {
     '!**/modules/*',
     '!**/dtos/**/*',
     '!**/entities/*',
-    '!**/utils/*',
+    '**/utils/*',
     '!**/decorators/**/*',
   ],
   coverageDirectory: '../coverage',

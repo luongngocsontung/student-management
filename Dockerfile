@@ -5,12 +5,12 @@ FROM node:22-alpine
 WORKDIR /app
 
 # Copy package files and install dependencies
-COPY package.json pnpm-lock.yaml ./
-RUN corepack enable && pnpm install --frozen-lockfile
+COPY package.json package-lock.json ./
+RUN npm i
 
 # Generate Prisma Client
 COPY prisma ./
-RUN pnpm prisma generate
+RUN npx prisma generate
 
 # Copy the rest of the application code
 COPY . .
@@ -19,4 +19,4 @@ COPY . .
 EXPOSE ${APP_PORT}
 
 # Ensure Prisma migration runs before the app starts
-CMD pnpm db:deploy && pnpm start:dev
+CMD ["sh", "-c", "npm run db:deploy && echo 'DB Deployed' && npm run start:dev"]

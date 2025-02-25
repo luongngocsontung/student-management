@@ -52,8 +52,6 @@ services:
       retries: 3
     volumes:
       - ./src:/app/src # Mount local files into the container
-    # command:
-    #   -
 volumes:
   db:
     driver: local

@@ -120,7 +120,7 @@ docker-compose up
 After the server is successfully up and running, you can proceed with running the seeding process.
 
 ```
-docker exec -it nestjs_app pnpm db:seed
+docker exec -it nestjs_app npm run db:seed
 ```
 
 ## Development
@@ -130,7 +130,7 @@ docker exec -it nestjs_app pnpm db:seed
 To run migrations:
 
 ```bash
-pnpm db:deploy
+npm run db:deploy
 ```
 
 ### Seeding
@@ -138,13 +138,13 @@ pnpm db:deploy
 To run for seeding:
 
 ```bash
-pnpm db:seed
+npm run db:seed
 ```
 
 ### Start application
 
 ```bash
-pnpm start
+npm run start:dev
 ```
 
 ### Run test
@@ -152,17 +152,17 @@ pnpm start
 To run tests:
 
 ```bash
-pnpm test
+npm run test
 ```
 
 ### Running and checking coverage
 
 ```bash
-pnpm test:cov
+npm run test:cov
 ```
 
 ### Build application
 
 ```bash
-pnpm build
+npm run build
 ```

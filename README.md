@@ -1,20 +1,17 @@
-# Education Connection Backend
+# Student management
 
 ## Overview
 
-Education connection is a backend service designed to help teachers perform administrative functions for their students. It's built using the NestJS framework, offering robust API endpoints for clients.
+- This project is a student management app.
+- The app is a simple app for managing students and teachers.
 
 ## Table Of Content
 
 - [Overview](#overview)
 - [Table Of Content](#table-of-content)
-- [Approach](#approach)
-  - [Technologies](#technologies)
-  - [Generate source structure](#generate-source-structure)
-  - [Choose a development method](#choose-a-development-method)
-  - [Develop APIs and unit test](#develop-apis-and-unit-test)
-  - [More ideas](#more-ideas)
+- [Features](#features)
 - [Tech stacks](#tech-stacks)
+- [Code structure](#code-structure)
 - [Test coverage](#test-coverage)
 - [How to run](#how-to-run)
   - [Pre-requisites](#pre-requisites)
@@ -22,13 +19,9 @@ Education connection is a backend service designed to help teachers perform admi
   - [Environment setup](#environment-setup)
   - [Run docker compose](#run-docker-compose)
   - [Seeding](#seeding)
-- [Development](#development)
-- [Production](#production)
-- [How to test](#how-to-test)
-  - [Import Postman collection](#import-postman-collection)
-  - [Call the first api](#call-the-first-api)
-- [Note](#note)
-- [Contact](#contact)
+    - [Teacher seeding](#table-teachers)
+    - [Student seeding](#table-students)
+- [Other commands](#other-commands)
 
 ## Features
 
@@ -37,33 +30,6 @@ Education connection is a backend service designed to help teachers perform admi
 - Teacher can suspend a specified student.
 - Teacher can retrieve a list of students who can receive a given notification.
 
-## Approach
-
-### Technologies
-
-- Choose a library or framework to develop APIs.
-- There are many options for this such as ExpressJS, NestJS, etc.
-
-### Generate source structure
-
-- Depend on requirement or project scope, choose a template or structure for this project.
-- There are many options such as 3-layers architecture, module architecture, etc.
-
-### Choose a development method
-
-- Think about TDD (Test-driven development) or TLD (Test-Last development).
-
-### Develop APIs and unit test
-
-- Following the requirements, develop APIs to implement features.
-- Write unit test to verify apis.
-
-### More ideas
-
-- Implement security with authentication, authorization.
-- Tracing with log.
-- Deploy app.
-
 ## Tech stacks
 
 - **Backend Framework**: NestJS
@@ -71,13 +37,52 @@ Education connection is a backend service designed to help teachers perform admi
 - **Testing**: Jest
 - **Code Formatting and Linting**: ESLint, Prettier
 
+## Code structure
+
+```tree
+...
+├── prisma
+│   ├── migrations
+│   ├── schema.prisma
+│   └── seed.ts
+├── src
+│   ├── __mocks__
+│   ├── app.controller.ts
+│   ├── app.module.ts
+│   ├── config
+│   ├── constants
+│   ├── logger
+│   │   └── logger.middleware.ts
+│   ├── main.ts
+│   ├── prisma
+│   │   ├── prisma.module.ts
+│   │   └── prisma.service.ts
+│   ├── repositories
+│   │   ├── repository.module.ts
+│   │   ├── student.repo.ts
+│   │   ├── teacher-on-student.repo.ts
+│   │   ├── teacher.repo.ts
+│   │   └── tests
+│   ├── teacher
+│   │   ├── dtos
+│   │   │   ├── index.ts
+│   │   │   └── request
+│   │   ├── teacher.controller.spec.ts
+│   │   ├── teacher.controller.ts
+│   │   ├── teacher.module.ts
+│   │   ├── teacher.service.spec.ts
+│   │   └── teacher.service.ts
+│   ├── types
+│   └── utils
+...
+```
+
 ## How to run
 
 ### Pre-requisites
 
-- Node.js v18.19.0
 - Docker
-- Postman
+- Docker Compose
 
 ### Installation
 
@@ -112,7 +117,7 @@ DATABASE_URL=mysql://${DATABASE_USERNAME}:${DATABASE_PASSWORD}@${DATABASE_HOST}:
 At folder `student-management`, to build, start and run services:
 
 ```bash
-docker-compose up
+docker compose up
 ```
 
 ### Seeding
@@ -123,7 +128,32 @@ After the server is successfully up and running, you can proceed with running th
 docker exec -it nestjs_app npm run db:seed
 ```
 
-## Development
+After the seeding process is completed, data will be inserted into the database as follows:
+
+#### Table teachers:
+
+| id  | email                  |
+| --- | ---------------------- |
+| 1   | teacherken@gmail.com   |
+| 2   | teacherjoe@gmail.com   |
+| 3   | teacherDuc@gmail.com   |
+| 4   | teacherHoang@gmail.com |
+
+#### Table students:
+
+| id  | email                                    |
+| --- | ---------------------------------------- |
+| 1   | studentjon@gmail.com                     |
+| 2   | studenthon@gmail.com                     |
+| 3   | commonstudent1@gmail.com                 |
+| 4   | commonstudent2@gmail.com                 |
+| 5   | student_only_under_teacher_ken@gmail.com |
+| 6   | studentmary@gmail.com                    |
+| 7   | studentagnes@gmail.com                   |
+| 8   | studentmiche@gmail.com                   |
+| 9   | studentbob@gmail.com                     |
+
+## Other commands
 
 ### Database Migrations
 
@@ -141,7 +171,7 @@ To run for seeding:
 npm run db:seed
 ```
 
-### Start application
+### Start application in watch-mode
 
 ```bash
 npm run start:dev
